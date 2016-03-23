@@ -1,6 +1,6 @@
-/*! pie-chart - v1.0.0 - 2015-08-12
+/*! pie-chart - v1.0.0 - 2016-03-23
 * https://github.com/n3-charts/pie-chart
-* Copyright (c) 2015 n3-charts  Licensed ,  */
+* Copyright (c) 2016 n3-charts  Licensed ,  */
 (function() {
     'use strict';
 
@@ -122,20 +122,20 @@ angular.module('n3-pie-utils', [])
 
 updatePaths: function(svg, data, dimensions, options) {
   var tools = this.getTools(dimensions, options);
-
+  
   var tween = function(d) {
     var oldAngles = this.__current ? this.__current : {startAngle: d.startAngle, endAngle: d.startAngle};
     var newAngles = {startAngle: d.startAngle, endAngle: d.endAngle};
 
     var i = d3.interpolate(oldAngles, newAngles);
-
+    
     return function(t) {return tools.arc(i(t)); };
   };
-
+  
   var paths = svg.selectAll("#n3-pie-arcs")
     .selectAll('.arc')
     .data(tools.pie(data), function(d) {return d.data.label;})
-
+  
   paths.enter()
     .append("path")
       .attr({
@@ -147,7 +147,7 @@ updatePaths: function(svg, data, dimensions, options) {
         "fill-opacity": 0.8
       })
   ;
-
+  
   paths
     .transition()
       .duration(250)
@@ -156,9 +156,9 @@ updatePaths: function(svg, data, dimensions, options) {
         this.__current = {startAngle: d.startAngle, endAngle: d.endAngle};
       })
   ;
-
+  
   paths.exit().remove();
-
+  
   return this;
 },
 
@@ -176,7 +176,7 @@ getTools: function(dimensions, options) {
   if (options.mode === "gauge") {
     pieLayout.sort(null);
   }
-
+  
   return {pie: pieLayout, arc: arc};
 },
 
@@ -245,50 +245,111 @@ updateGaugeLegend: function(svg, data, dimensions, options) {
     return;
   }
 
-  var legend = svg.selectAll("#n3-pie-legend");
+  if (options.legendBottom) {
+    var legend = svg.selectAll("#n3-pie-legend");
 
-  var title = legend.selectAll(".legend-title")
-    .data(data.filter(function(s) {return !s.__isComplement;}));
+    var value = legend.selectAll(".legend-value")
+      .data(data.filter(function(s) {return !s.__isComplement;}));
 
-  title.enter()
-    .append("text")
-    .attr({
-      "class": "legend-title",
-      "text-anchor": "middle",
-      "y": -size/4 + "px"
-    })
-    .style({
-      "font-size": Math.max(size/2, 12) + "px",
-      "fill": function(d) {return d.color;},
-      "fill-opacity": 0.8
-    })
-  ;
+    value.enter()
+      .append("text")
+      .attr({
+        "class": "legend-value",
+        "text-anchor": "middle",
+        "y": -size/4 + "px"
+      })
+      .style({
+        "font-size": size + "px",
+        "fill": function(d) {return d.color;},
+        "fill-opacity": 0.8
+      })
+    ;
 
-  title.text(function(d) {return d.label;});
+    value
+      .text(function(d) {return d.value + (d.suffix || '');});
 
-  title.exit().remove();
+    value.exit().remove();
 
-  var value = legend.selectAll(".legend-value")
-    .data(data.filter(function(s) {return !s.__isComplement;}));
+    var titleSize = Math.max(size/2, 12);
 
-  value.enter()
-    .append("text")
-    .attr({
-      "class": "legend-value",
-      "text-anchor": "middle",
-      "y": size/1.5 + "px"
-    })
-    .style({
-      "font-size": size + "px",
-      "fill": function(d) {return d.color;},
-      "fill-opacity": 0.8
-    })
-  ;
+    if (options.titleSize) {
+      titleSize = options.titleSize;
+    }
 
-  value
-    .text(function(d) {return d.value + (d.suffix || '');});
+    var title = legend.selectAll(".legend-title")
+      .data(data.filter(function(s) {return !s.__isComplement;}));
 
-  value.exit().remove();
+    title.enter()
+      .append("text")
+      .attr({
+        "class": "legend-title",
+        "text-anchor": "middle",
+        "y": size/1.5 + "px"
+      })
+      .style({
+        "font-size": titleSize + "px",
+        "fill": function(d) {return d.color;},
+        "fill-opacity": 0.8
+      })
+    ;
+
+    title.text(function(d) {return d.label;});
+
+    title.exit().remove();
+  } else {
+    var legend = svg.selectAll("#n3-pie-legend");
+
+    var titleSize = Math.max(size/2, 12);
+
+    if (options.titleSize) {
+      titleSize = options.titleSize;
+    }
+
+    var title = legend.selectAll(".legend-title")
+      .data(data.filter(function(s) {return !s.__isComplement;}));
+
+    title.enter()
+      .append("text")
+      .attr({
+        "class": "legend-title",
+        "text-anchor": "middle",
+        "y": -size/4 + "px"
+      })
+      .style({
+        "font-size": titleSize + "px",
+        "fill": function(d) {return d.color;},
+        "fill-opacity": 0.8
+      })
+    ;
+
+    title.text(function(d) {return d.label;});
+
+    title.exit().remove();
+
+    var value = legend.selectAll(".legend-value")
+      .data(data.filter(function(s) {return !s.__isComplement;}));
+
+    value.enter()
+      .append("text")
+      .attr({
+        "class": "legend-value",
+        "text-anchor": "middle",
+        "y": size/1.5 + "px"
+      })
+      .style({
+        "font-size": size + "px",
+        "fill": function(d) {return d.color;},
+        "fill-opacity": 0.8
+      })
+    ;
+
+    value
+      .text(function(d) {return d.value + (d.suffix || '');});
+
+    value.exit().remove();
+  }
+
+
 },
 
 getLegendLabelFunction: function(availableWidth) {
@@ -344,7 +405,8 @@ getLegendLabel: function(label, value, totalLength) {
   value.split("").forEach(function(c, i) {dots[totalLength - value.length + i] = c;});
 
   return dots.join("");
-},
+}
+,
 
 increase_brightness: function (hex, percent) {
   hex = hex.replace(/^\s*#|\s*$/g, '');
@@ -367,7 +429,7 @@ addDataForGauge: function(data, options) {
   if (!options || options.mode !== "gauge" || data.length !== 1) {
     return data;
   }
-
+  
   data = data.concat();
 
   var colorComplement = "white";
@@ -393,7 +455,7 @@ clean: function(element) {
 
 bootstrap: function(element, dimensions) {
   d3.select(element).classed('chart', true);
-
+  
   var width = dimensions.width;
   var height = dimensions.height;
 
@@ -405,7 +467,7 @@ bootstrap: function(element, dimensions) {
       (dimensions.width*.5) + ',' +
       (dimensions.height*.5) + ')'
   );
-
+  
   return svg;
 },
 
@@ -421,17 +483,17 @@ looksLikeSameSeries: function(newData, oldData) {
   if (newData.length !== oldData.length) {
     return false;
   }
-
+  
   for (var i = 0; i < newData.length; i++) {
     if (oldData[i].label !== newData[i].label) {
       return false;
     }
-
+    
     if (oldData[i].color !== newData[i].color) {
       return false;
     }
   }
-
+  
   return true;
 },
 
@@ -441,12 +503,12 @@ sanitizeOptions: function(options) {
   } else {
     options.thickness = parseInt(options.thickness);
   }
-
-
+  
+  
   if (options.mode === "gauge") {
     this.sanitizeGaugeOptions(options);
   }
-
+  
   return options;
 },
 
