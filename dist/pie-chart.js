@@ -348,8 +348,6 @@ updateGaugeLegend: function(svg, data, dimensions, options) {
 
     value.exit().remove();
   }
-
-
 },
 
 getLegendLabelFunction: function(availableWidth) {

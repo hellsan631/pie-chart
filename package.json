@@ -1,6 +1,6 @@
 {
   "name": "pie-chart",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "homepage": "https://github.com/n3-charts/pie-chart",
   "licenses": {
     "type": "MIT",
@@ -14,6 +14,7 @@
     "grunt-contrib-uglify": "~0.2.0",
     "grunt-contrib-watch": "~0.4.0",
     "grunt-karma": "~0.6.2",
+    "karma": "~0.10.0",
     "jshint-stylish": "^2.0.1",
     "karma-coverage": "~0.1.0",
     "matchdep": "~0.1.2"

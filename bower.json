@@ -1,7 +1,7 @@
 {
   "name": "pie-chart",
   "main": "dist/pie-chart.min.js",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "homepage": "https://github.com/n3-charts/pie-chart",
   "authors": [
     "lorem--ipsum <vaporzub@gmail.com>"
@@ -22,9 +22,12 @@
   ],
   "dependencies": {
     "d3": "~3.1.7",
-    "angular": "*"
+    "angular": "~1.4.0"
   },
   "devDependencies": {
-    "angular-mocks": "*"
+    "angular-mocks": "~1.4.0"
+  },
+  "resolutions": {
+    "angular": "~1.4.0"
   }
 }
