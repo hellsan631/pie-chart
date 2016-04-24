@@ -1,4 +1,4 @@
-/*! pie-chart - v1.0.2 - 2016-03-23
+/*! pie-chart - v1.0.2 - 2016-04-23
 * https://github.com/n3-charts/pie-chart
 * Copyright (c) 2016 n3-charts  Licensed ,  */
 (function() {
@@ -276,7 +276,13 @@ updateGaugeLegend: function(svg, data, dimensions, options) {
     ;
 
     value
-      .text(function(d) {return d.value + (d.suffix || '');});
+      .text(function(d) {
+        if (d.legendValue) {
+          return d.legendValue;
+        }
+
+        return d.value + (d.suffix || '');
+      });
 
     value.exit().remove();
 
@@ -333,7 +339,13 @@ updateGaugeLegend: function(svg, data, dimensions, options) {
     ;
 
     value
-      .text(function(d) {return d.value + (d.suffix || '');});
+      .text(function(d) {
+        if (d.legendValue) {
+          return d.legendValue;
+        }
+
+        return d.value + (d.suffix || '');
+      });
 
     value.exit().remove();
   }
